@@ -103,6 +103,9 @@ app.delete("/listings/:id",async (req,res) =>{
 //     res.send("successfull testing");
 // });
 
+// // middleware fro error handling
+
+
 // // start server 
 app.listen(8080,()=>{
 console.log("server is listening port 8080");
