@@ -6,7 +6,9 @@ const path =require("path");
 const methodOverride=require("method-override");
 const ejsMate = require("ejs-mate");
 const { render } = require("ejs");
-
+const wrapAsync=require("./utilis/wrapAsync.js");
+const ExpressError=require("./utilis/ExpressError.js");
+const {listingSchema}=require("./schema.js");
 
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust"
 // // call main fucntion 
@@ -34,12 +36,24 @@ app.use(express.static(path.join(__dirname,"/public")));
 app.get("/",(req,res)=>{// api 
     res.send("hii,I am root");
 })
+
+// // schema validation to middleware
+const validateListing=(req,res,next)=>{
+let {error}=listingSchema.validate(req.body);
+if(error){
+    throw new ExpressError(400,error);
+}
+else{
+    next();
+}
+}
+
 // // CURD
 // // 1.index route
-app.get("/listings",async(req,res)=>{
+app.get("/listings",wrapAsync(async(req,res)=>{
    const allListings=await Listing.find({});
         res.render("listings/index.ejs",{allListings});
-    });
+    }));
 
 
     // // 3. create : new route 
@@ -48,47 +62,61 @@ app.get("/listings/new",(req,res)=>{
 });
 
 // // 2.Read : show route
-app.get("/listings/:id",async(req,res)=>{
+app.get("/listings/:id",validateListing,wrapAsync(async(req,res)=>{
     //extrect id 
     let {id}=req.params;
    const listing = await Listing.findById(id);
    res.render("listings/show.ejs",{listing});
-});
+}));
 
-// // 4.Create : create route
-app.post("/listings",async(req,res)=>{
-// let {title,description,image,price,country,location}=req.body;
-// let listing=req.body.listing;
-const newListing = new Listing(req.body.listing);
+// // 4.Create : create route // wrapAsync handle custom error
+app.post("/listings",validateListing,wrapAsync(async(req,res,next)=>{
+// if(!req.body.listing){
+//     throw new ExpressError(400,"send valid data for listing");
+// }
+  const newListing = new Listing(req.body.listing);
+// //  use schema.js file so dont need to throw the error 
+//   if(!newListing.title){
+//     throw new ExpressError(400," Title is missing!");
+// }
+// if(!newListing.description){
+//     throw new ExpressError(400," Description is missing!");
+// }
+// if(!newListing.location){
+//     throw new ExpressError(400," Location is missing!");
+// }
 await newListing.save();
 res.redirect("/listings");
+
+
 // console.log(listing);
-});
+})
+);
 
 // // 5. update : edit route
 
-app.get("/listings/:id/edit",async (req,res)=>{
+app.get("/listings/:id/edit",wrapAsync(async (req,res)=>{
         let {id}=req.params;
    const listing = await Listing.findById(id);
    res.render("listings/edit.ejs",{listing});
 
 
-});
+}));
 
 // // 5.update: route
-app.put("/listings/:id",async (req,res)=>{
+app.put("/listings/:id",validateListing,wrapAsync(async (req,res)=>{
       let {id}=req.params;
    await  Listing.findByIdAndUpdate(id,{...req.body.listing});
    res.redirect(`/listings/${id}`);
-});
+}));
 
 // // 6. Delete route 
-app.delete("/listings/:id",async (req,res) =>{
+app.delete("/listings/:id",wrapAsync(async (req,res) =>{
     let {id} = req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);
     console.log(deletedListing);
     res.redirect("/listings");
-})
+}));
 
 // // model access route
 // app.get("/testListing",async(req,res) =>{
@@ -104,7 +132,19 @@ app.delete("/listings/:id",async (req,res) =>{
 // });
 
 // // middleware fro error handling
-
+app.use((req,res,next)=>{
+    next(new ExpressError(404,"Page Not Found!"));
+});
+app.use((err,req,res,next)=>{
+    // // throw express error;
+    // // jab bhi error ayega usko deconstruct krege
+    let {statusCode=500,message="Something went wrong"}=err;
+    // // then send res 
+    // res.status(statusCode).send(message);
+    res.status(statusCode).render("error.ejs",{message});
+    
+// res.send("something went wrong!");
+})
 
 // // start server 
 app.listen(8080,()=>{
