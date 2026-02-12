@@ -27,6 +27,7 @@ async function main(){
 
 app.set("views",path.join(__dirname,"views"));
 app.set("view engine","ejs");
+app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(methodOverride("_method"));
 app.engine('ejs',ejsMate);
@@ -41,7 +42,8 @@ app.get("/",(req,res)=>{// api
 const validateListing=(req,res,next)=>{
 let {error}=listingSchema.validate(req.body);
 if(error){
-    throw new ExpressError(400,error);
+    let errMsg=error.details.map((el)=> el.message).join(",");
+    throw new ExpressError(400,errMsg);
 }
 else{
     next();
@@ -62,7 +64,7 @@ app.get("/listings/new",(req,res)=>{
 });
 
 // // 2.Read : show route
-app.get("/listings/:id",validateListing,wrapAsync(async(req,res)=>{
+app.get("/listings/:id",wrapAsync(async(req,res)=>{
     //extrect id 
     let {id}=req.params;
    const listing = await Listing.findById(id);
