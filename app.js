@@ -9,6 +9,9 @@ const { render } = require("ejs");
 const wrapAsync=require("./utilis/wrapAsync.js");
 const ExpressError=require("./utilis/ExpressError.js");
 const {listingSchema}=require("./schema.js");
+const Review=require("./models/review.js")
+
+
 
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust"
 // // call main fucntion 
@@ -119,6 +122,22 @@ app.delete("/listings/:id",wrapAsync(async (req,res) =>{
     console.log(deletedListing);
     res.redirect("/listings");
 }));
+
+////  reviews // post route
+app.post("/listings/:id/reviews",async (req,res)=>{
+        let listing =await Listing.findById(req.params.id);
+        let newReview = new Review(req.body.review);
+        
+        listing.reviews.push(newReview);
+
+        await newReview.save();
+        await listing.save();
+
+        console.log("new review saved");
+        res.send("new review saved");
+
+});
+
 
 // // model access route
 // app.get("/testListing",async(req,res) =>{
