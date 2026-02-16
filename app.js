@@ -189,7 +189,7 @@ app.use((err,req,res,next)=>{
 // res.send("something went wrong!");
 })
 
-start server 
+// start server 
 app.listen(8080,()=>{
 console.log("server is listening port 8080");
 })
