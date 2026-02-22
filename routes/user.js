@@ -4,37 +4,15 @@ const User = require("../models/user.js");
 const wrapAsync = require("../utilis/wrapAsync");
 const passport = require("passport");
 const {saveRedirectUrl}= require("../middleware.js");
+const userController = require("../controllers/users.js");
+// // signUp
+router.get("/signup",userController.renderSignupForm)
 
-
-router.get("/signup",(req,res)=>{
-    res.render("users/signup.ejs");
-})
-
-router.post("/signup",wrapAsync (async(req,res,)=>{
-    try{
- let {username,email,password}=req.body;
-    const newUser = new User({email,username});
-    const registerUser = await User.register(newUser,password);
-   console.log(registerUser);
-   req.login(registerUser,(err)=>{
-    if(err){
-        return next(err);
-    }
-     req.flash("success","welcome to Wanderlust !");
-   res.redirect("/listings");
-    });
-    }catch(e){
-        req.flash("error",e.message);
-        res.redirect("/signup");
-    }
-   
-}));
+router.post("/signup",wrapAsync (userController.signup));
 
 // // login user
 
-router.get("/login",(req,res)=>{
-    res.render("users/login.ejs");
-})
+router.get("/login",userController.renderLoginForm)
 router.post("/login",
     saveRedirectUrl,
     passport.authenticate("local", {
