@@ -12,7 +12,12 @@ const reviewSchema = new Schema({
     createdAt:{
         type:Date,
         default:Date.now()// agr koi date assign nhi kiye tho cuurent date store ho jayegi 
-    }
+    },
+ author: {
+    type: Schema.Types.ObjectId,
+    ref : "User",
+ }
+
 });
 
 module.exports = mongoose.model("Review",reviewSchema);

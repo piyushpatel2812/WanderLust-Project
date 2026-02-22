@@ -1,6 +1,7 @@
 const mongoose =require("mongoose");
 const initData=require("./data.js");
 const Listing=require("../models/listing.js");
+const { init } = require("../models/review.js");
 
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust"
 // // call main fucntion 
@@ -19,6 +20,7 @@ async function main(){
 
 const initDB=async()=>{
     await Listing.deleteMany({});//agr phele se random data hai usko dlt karega
+      initData.data=initData.data.map((obj)=>({...obj,owner:"69985b3746eea15e62d77e57"}));// owner property add krega 
    await Listing.insertMany(initData.data);//initdata apne app pe object h 
    console.log("data was intilized")
 };
