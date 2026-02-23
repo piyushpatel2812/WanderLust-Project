@@ -26,7 +26,24 @@ module.exports.signup = async(req,res,)=>{
    
 };
 
-// login form
+// login user form
 module.exports.renderLoginForm =(req,res)=>{
     res.render("users/login.ejs");
+};
+
+module.exports.login =  async (req, res) => {
+        req.flash("success","Welcome back to Wanderlust");
+        let redirectUrl = res.locals.redirectUrl || "/listings";
+        res.redirect( redirectUrl);
+    };
+
+// // logout
+module.exports.logout = (req,res,next)=>{
+    req.logOut((err)=>{
+        if(err){
+          return  next(err);
+        }
+        req.flash("success","you are logged out!");
+        res.redirect("/listings");
+    });
 };
