@@ -4,14 +4,20 @@ const wrapAsync=require("../utilis/wrapAsync.js");
 const Listing=require("../models/listing.js");
 const {isLoggedIn,isOwner,validateListing} = require("../middleware.js");
 const listingController = require("../controllers/listings.js");
+const multer  = require('multer');
+const {storage} = require("../cloudConfig.js");
+const upload = multer({ storage });
+
 
 // // CURD
 
 router.route("/")
 .get(wrapAsync(listingController.index))// // 1.index route
 // // 4.Create : create route // wrapAsync handle custom error
-.post(isLoggedIn,validateListing,wrapAsync(listingController.createListing));
-
+// .post(isLoggedIn,validateListing,wrapAsync(listingController.createListing));
+.post(upload.single('listing[image][url]'),(req,res)=>{
+    res.send(res.file);// res.file come on multer library
+});
 
  // // 3. create : new route 
 router.get("/new",isLoggedIn,listingController.renderNewForm);

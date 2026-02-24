@@ -1,4 +1,4 @@
- const Listings = require("./models/listing");
+ const Listing= require("./models/listing");
   const Review = require("./models/review");
  const ExpressError=require("./utilis/ExpressError.js");
 const {listingSchema,reviewSchema}=require("./schema.js");
