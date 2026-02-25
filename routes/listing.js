@@ -14,10 +14,7 @@ const upload = multer({ storage });
 router.route("/")
 .get(wrapAsync(listingController.index))// // 1.index route
 // // 4.Create : create route // wrapAsync handle custom error
-// .post(isLoggedIn,validateListing,wrapAsync(listingController.createListing));
-.post(upload.single('listing[image][url]'),(req,res)=>{
-    res.send(res.file);// res.file come on multer library
-});
+.post(isLoggedIn,upload.single("listing[image][url]"),validateListing,wrapAsync(listingController.createListing));
 
  // // 3. create : new route 
 router.get("/new",isLoggedIn,listingController.renderNewForm);
@@ -28,7 +25,7 @@ router.route("/:id")
 .get(wrapAsync(listingController.showListing))
 
 // // 5.update: route
-.put(isLoggedIn,isOwner,validateListing,wrapAsync(listingController.updateListing))
+.put(isLoggedIn,isOwner,upload.single("listing[image][url]"),validateListing,wrapAsync(listingController.updateListing))
 
 // // 6. Delete route 
 .delete(isLoggedIn,isOwner,wrapAsync(listingController.destroyListing));
