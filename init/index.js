@@ -1,27 +1,37 @@
-const mongoose =require("mongoose");
-const initData=require("./data.js");
-const Listing=require("../models/listing.js");
-const { init } = require("../models/review.js");
+require("dotenv").config({ path: "../.env" });
 
-const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust"
-// // call main fucntion 
-main()
-.then(() =>{
-    console.log("connected to DB")
-})
-.catch((err) =>{
-    console.log(err);
-});
+const mongoose = require("mongoose");
+const initData = require("./data.js");
+const Listing = require("../models/listing.js");
 
-// // create datbase
-async function main(){
-    await mongoose.connect(MONGO_URL);
+// MongoDB URL from .env
+const MONGO_URL = process.env.ATLASDB_URL;
+
+// connect database
+async function main() {
+  await mongoose.connect(MONGO_URL);
 }
 
-const initDB=async()=>{
-    await Listing.deleteMany({});//agr phele se random data hai usko dlt karega
-      initData.data=initData.data.map((obj)=>({...obj,owner:"69985b3746eea15e62d77e57"}));// owner property add krega 
-   await Listing.insertMany(initData.data);//initdata apne app pe object h 
-   console.log("data was intilized")
+main()
+  .then(() => {
+    console.log("connected to DB");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+// initialize database
+const initDB = async () => {
+  await Listing.deleteMany({});
+
+  initData.data = initData.data.map((obj) => ({
+    ...obj,
+    owner:"69a1af22429def96b12c8d22" ,
+  }));
+
+  await Listing.insertMany(initData.data);
+
+  console.log("data was initialized");
 };
+
 initDB();
