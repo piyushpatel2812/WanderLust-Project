@@ -22,7 +22,11 @@ const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 
-const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
+// const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
+const dbUrl = process.env.ATLASDB_URL;
+
+
+
 
 // // call main fucntion 
 main()
@@ -35,7 +39,7 @@ main()
 
 // // create datbase
 async function main(){
-    await mongoose.connect(MONGO_URL);
+    await mongoose.connect(dbUrl);
 }
 
 app.set("views",path.join(__dirname,"views"));
@@ -59,9 +63,9 @@ const sessionOption = {
             },
 };
 
-app.get("/",(req,res)=>{// api 
-    res.send("hii,I am root");
-})
+// app.get("/",(req,res)=>{// api 
+//     res.send("hii,I am root");
+// })
 
 app.use(session(sessionOption));
 app.use(flash());// flash ko humko route se use krna poadega 
