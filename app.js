@@ -41,11 +41,11 @@ main()
     console.log(err);
 });
 
-async function main(){
-    await mongoose.connect(dbUrl,{
-        dbName:"wanderlust"
-    });
-}
+// async function main(){
+//     await mongoose.connect(dbUrl,{
+//         dbName:"wanderlust"
+//     });
+// }
 
 
 // // create datbase
@@ -94,9 +94,6 @@ const sessionOption = {
             },
 };
 
-app.get("/",(req,res)=>{// api 
-    res.redirect("/listings");
-})
 
 
 app.use(session(sessionOption));
@@ -119,6 +116,10 @@ app.use((req,res,next)=>{
     next();
 });
 
+
+app.get("/",(req,res)=>{// api 
+    res.redirect("/listings");
+})
 
 // root route
 // app.get("/",(req,res)=>{
