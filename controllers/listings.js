@@ -103,6 +103,10 @@ module.exports.destroyListing=async (req,res) =>{
 module.exports.searchListing = async (req, res) => {
     let { search } = req.query;
 
+  if(!search){
+        return res.redirect("/listings");
+    }
+
     const allListings = await Listing.find({
         $or: [
             { title: { $regex: search, $options: "i" } },// i caseSenstive pe bhi kaam krega /$regex mtlb partial search 
