@@ -25,6 +25,14 @@ const userRouter = require("./routes/user.js");
 const dbUrl = process.env.ATLASDB_URL ;
 
 // // call main fucntion 
+// main()
+// .then(() =>{
+//     console.log("connected to Db")
+// })
+// .catch((err) =>{
+//     console.log(err);
+// });
+
 main()
 .then(() =>{
     console.log("connected to Db")
@@ -32,6 +40,13 @@ main()
 .catch((err) =>{
     console.log(err);
 });
+
+async function main(){
+    await mongoose.connect(dbUrl,{
+        dbName:"wanderlust"
+    });
+}
+
 
 // // create datbase
 async function main(){
@@ -79,9 +94,9 @@ const sessionOption = {
             },
 };
 
-// app.get("/",(req,res)=>{// api 
-//     res.send("hii,I am root");
-// })
+app.get("/",(req,res)=>{// api 
+    res.redirect("/listings");
+})
 
 
 app.use(session(sessionOption));

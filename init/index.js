@@ -15,6 +15,7 @@ async function main() {
 main()
   .then(() => {
     console.log("connected to DB");
+    console.log("Mongo URL:", MONGO_URL);   // ⭐ ye line add karo
   })
   .catch((err) => {
     console.log(err);
@@ -26,8 +27,7 @@ const initDB = async () => {
 
   initData.data = initData.data.map((obj) => ({
     ...obj,
-    owner:"69a1af22429def96b12c8d22" ,
-  }));
+  owner: new mongoose.Types.ObjectId("69a1af22429def96b12c8d22")  }));
 
   await Listing.insertMany(initData.data);
 
