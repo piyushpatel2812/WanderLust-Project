@@ -100,16 +100,16 @@ module.exports.destroyListing=async (req,res) =>{
 
 // 7. search route
 // SEARCH LISTING
-module.exports.searchListing = async (req, res) => {
-    let { search } = req.query;
-
+module.exports.searchListing = async (req,res)=>{
+    let {search} = req.query;
 
     const allListings = await Listing.find({
-        $or: [
-            { title: { $regex: search, $options: "i" } },// i caseSenstive pe bhi kaam krega /$regex mtlb partial search 
-            { location: { $regex: search, $options: "i" } }
+        $or:[
+            {title:{$regex:search,$options:"i"}},
+            {location:{$regex:search,$options:"i"}},
+            {country:{$regex:search,$options:"i"}}
         ]
     });
 
-    res.render("listings/index.ejs", { allListings });
-};
+    res.render("listings/index.ejs",{allListings});
+}
