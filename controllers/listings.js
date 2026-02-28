@@ -102,7 +102,9 @@ module.exports.destroyListing=async (req,res) =>{
 // SEARCH LISTING
 module.exports.searchListing = async (req,res)=>{
     let {search} = req.query;
-
+    if(!search){
+        return res.redirect("/listings");
+    }
     const allListings = await Listing.find({
         $or:[
             {title:{$regex:search,$options:"i"}},
@@ -110,6 +112,16 @@ module.exports.searchListing = async (req,res)=>{
             {country:{$regex:search,$options:"i"}}
         ]
     });
+
+    res.render("listings/index.ejs",{allListings});
+}
+
+//  filter route 
+// CATEGORY FILTER
+module.exports.filterCategory = async(req,res)=>{
+    let {category} = req.params;
+
+    const allListings = await Listing.find({category:category});
 
     res.render("listings/index.ejs",{allListings});
 }
