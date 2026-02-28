@@ -23,13 +23,15 @@ const listingSchema = new Schema({
   enum: [
     "Trending",
     "Rooms",
-    "Iconic cities",
+    "Iconic Cities",
     "Mountains",
     "Castles",
-    "Amazing pools",
+    "Amazing Pools",
     "Camping",
     "Farms",
-    "Arctic"
+    "Arctic",
+    "Domes",
+    "Boats"
   ]
 },
     reviews:[
