@@ -139,7 +139,7 @@ app.get("/",(req,res)=>{// api
 // // express routes file access
 app.use("/listings",listingsRouter);
 app.use("/listings/:id/reviews",reviewsRouter)
-app.use("/",userRouter);
+app.use("/users",userRouter);
 
 // // middleware fro error handling /* for all route
 app.use((req,res,next)=>{
