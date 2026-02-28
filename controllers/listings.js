@@ -98,3 +98,17 @@ module.exports.destroyListing=async (req,res) =>{
     res.redirect("/listings");
 }
 
+// 7. search route
+// SEARCH LISTING
+module.exports.searchListing = async (req, res) => {
+    let { search } = req.query;
+
+    const allListings = await Listing.find({
+        $or: [
+            { title: { $regex: search, $options: "i" } },// i caseSenstive pe bhi kaam krega /$regex mtlb partial search 
+            { location: { $regex: search, $options: "i" } }
+        ]
+    });
+
+    res.render("listings/index.ejs", { allListings });
+};
