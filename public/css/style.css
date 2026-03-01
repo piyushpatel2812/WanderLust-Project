@@ -117,11 +117,63 @@ min-height: 100vh;
 }
 
 
-/*   map  */
+/* map */
+#map{
+  width: 100%;
+  height: 450px;   
+}
 
-#map { 
-    height: 400px;
-    width: 60vh;
- }
+/* Tablet */
+@media (max-width: 992px){
+  #map{
+    height: 350px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px){
+  #map{
+    height: 250px;
+  }
+}
+
+/* star */
 
 
+
+/* STARABILITY OVERFLOW FIX */
+
+/* .starability-slot{
+  transform: scale(0.9);
+  transform-origin: left;
+  display:inline-block;
+  overflow:hidden;
+}
+@media (max-width:576px){
+  .starability-slot{
+    transform: scale(0.75);
+  }
+} */
+
+
+/* ===== STARABILITY FIX ===== */
+
+.starability-result{
+  margin-left:0 !important;
+  padding-left:0 !important;
+}
+
+.starability-result::before{
+  left:0 !important;
+}
+
+.starability-result{
+  transform: scale(0.9);
+  transform-origin:left;
+}
+
+@media (max-width:576px){
+  .starability-result{
+    transform: scale(0.75);
+  }
+}
