@@ -121,20 +121,7 @@ app.get("/",(req,res)=>{// api
     res.redirect("/listings");
 })
 
-// root route
-// app.get("/",(req,res)=>{
-//     res.redirect("/listings");
-// });
 
-// // demo user
-// app.get("/demouser",async(req,res)=>{
-//     let fakeUser = new User({
-//         email:"student@gmail.com",
-//         username:"delta-student",
-//     });
-//  let registeredUser = await User.register(fakeUser,"helloworld");
-//  res.send(registeredUser);
-// })
 
 // // express routes file access
 app.use("/listings",listingsRouter);
