@@ -40,4 +40,8 @@ router.route("/:id")
 // // 5. update : edit route
 router.get("/:id/edit",isLoggedIn,isOwner,wrapAsync(listingController.renderEditForm));
 
+// // booking route 
+router.post("/:id/book",listingController.createBooking)
+
+
 module.exports = router;

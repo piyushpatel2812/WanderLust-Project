@@ -1,4 +1,5 @@
 const Listing= require("../models/listing");
+const Booking = require("../models/booking");
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
@@ -125,3 +126,68 @@ module.exports.filterCategory = async(req,res)=>{
 
     res.render("listings/index.ejs",{allListings});
 }
+
+// / booking 
+module.exports.createBooking = async (req, res) => {
+  try {
+      if (!req.user) {
+      req.flash("error", "Please login to book");
+      return res.redirect("/users/login");
+    }
+    let { id } = req.params;
+    let { checkIn, checkOut } = req.body;
+
+    // basic validation
+    if (!checkIn || !checkOut) {
+      req.flash("error", "Please select valid dates");
+      return res.redirect(`/listings/${id}`);
+    }
+
+    let start = new Date(checkIn);// checkout humesha checlin ke baad hioga 
+    let end = new Date(checkOut);
+
+    if (end <= start) {
+      req.flash("error", "Check-out must be after check-in");
+      return res.redirect(`/listings/${id}`);
+    }
+
+    // get listing price
+    const listing = await Listing.findById(id);
+
+    // calculate nights
+    let nights = (end - start) / (1000 * 60 * 60 * 24);
+    let totalPrice = nights * listing.price;
+
+    // 🔥 overlap check
+    let existingBookings = await Booking.find({ listing: id });
+
+    for (let booking of existingBookings) {
+      if (
+        start < booking.checkOut &&
+        end > booking.checkIn
+      ) {
+        req.flash("error", "Dates already booked!");
+        return res.redirect(`/listings/${id}`);
+      }
+    }
+
+    // create booking
+    const newBooking = new Booking({
+      user: req.user._id,
+      listing: id,
+      checkIn: start,
+      checkOut: end,
+      totalPrice
+    });
+
+    await newBooking.save();
+
+    req.flash("success", "Booking successful!");
+    res.redirect(`/listings/${id}`);
+
+  } catch (err) {
+    console.log(err);
+    req.flash("error", "Something went wrong");
+    res.redirect(`/listings/${req.params.id}`);
+  }
+};

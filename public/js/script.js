@@ -17,3 +17,35 @@
     }, false)
   })
 })()
+
+//  flatpicker 
+
+flatpickr("#dateRange", {
+  mode: "range",
+  minDate: "today",
+  // inline: true,
+
+  onChange: function(selectedDates) {
+    if (selectedDates.length === 2) {
+
+      let checkIn = selectedDates[0];
+      let checkOut = selectedDates[1];
+
+      // set hidden fields
+      document.getElementById("checkIn").value = checkIn;
+      document.getElementById("checkOut").value = checkOut;
+
+      // calculate nights
+      let nights = (checkOut - checkIn) / (1000 * 60 * 60 * 24);
+
+      // listing price (EJS se lo)
+      let pricePerNight = listing.price;
+
+      let total = nights * pricePerNight;
+
+      // show on UI
+      document.getElementById("totalPrice").innerText =
+        `Total: ₹${total} for ${nights} nights`;
+    }
+  }
+});

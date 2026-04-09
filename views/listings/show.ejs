@@ -44,7 +44,37 @@ Edit
 </div>
 </div>
 <% } %>
+<!--  booking form -->
+<div class="row mt-4">
 
+  <!-- LEFT -->
+  <div class="col-md-7">
+    <div class="card p-3">
+      <h5>Select Dates</h5>
+      <input type="text" id="dateRange" class="form-control" placeholder="Select Dates">
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="col-md-5">
+    <div class="card p-3 shadow">
+
+      <h4>₹<%= listing.price %> <small>per night</small></h4>
+      <p id="totalPrice" class="mt-2 fw-bold text-success">Total: ₹0</p>
+
+      <form action="/listings/<%= listing._id %>/book" method="POST">
+
+        <input type="hidden" name="checkIn" id="checkIn">
+        <input type="hidden" name="checkOut" id="checkOut">
+
+        <button class="btn btn-danger w-100 mt-3">Reserve</button>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>
 <!-- REVIEW FORM -->
 
 <div class="row justify-content-center">
